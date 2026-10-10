@@ -127,6 +127,9 @@ export async function GET(req: Request) {
       handoffAt: conversation.handoffAt?.toISOString() ?? null,
       windowOpen: isWindowOpen(conversation.lastInboundAt),
       windowRemainingMs: windowRemainingMs(conversation.lastInboundAt),
+      // Para que un cerebro externo sepa si el cliente siguió escribiendo
+      // después de la ráfaga que le despacharon (y no conteste a medias).
+      lastInboundAt: conversation.lastInboundAt?.toISOString() ?? null,
     },
     lead: leadRows[0]
       ? { id: leadRows[0].lead.id, stageName: leadRows[0].stage.name }
