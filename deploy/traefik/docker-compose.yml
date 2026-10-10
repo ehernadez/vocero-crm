@@ -27,7 +27,9 @@ services:
     restart: unless-stopped
     environment:
       APP_BASE_URL: ${APP_BASE_URL}
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/vocero
+      # Host propio (vocero-db): la red del Traefik puede tener ya otro "postgres"
+      # y la app, al estar en las dos redes, resolvería el equivocado.
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@vocero-db:5432/vocero
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       META_WEBHOOK_VERIFY_TOKEN: ${META_WEBHOOK_VERIFY_TOKEN}
@@ -76,6 +78,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks:
+      default:
+        aliases:
+          - vocero-db
 
 networks:
   traefik:
